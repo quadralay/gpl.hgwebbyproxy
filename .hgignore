@@ -1,0 +1,10 @@
+# using glob syntax
+#
+syntax: glob
+.DS_Store
+._*
+
+# switching to regexp syntax
+#
+syntax: regexp
+
