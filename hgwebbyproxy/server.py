@@ -16,7 +16,7 @@ if __name__ == '__main__':
             server_host = sys.argv[2]
             server_port = int(sys.argv[3])
             server = rocket.Rocket((server_host, server_port), 'wsgi', {'wsgi_app': hgwebbyproxy_app}, 10, 25, 5, 600)
-            
+
             server.start()
 
     except KeyboardInterrupt:
