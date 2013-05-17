@@ -7,4 +7,5 @@ syntax: glob
 # switching to regexp syntax
 #
 syntax: regexp
+build/.*$
 
