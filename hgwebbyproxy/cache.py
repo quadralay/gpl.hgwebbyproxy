@@ -60,6 +60,6 @@ class CacheRecent(object):
     def iteritems(self):
         return self.__cache.iteritems()
 
-    def dump(self): 
+    def dump(self):
         for x, y in self.__cache.iteritems():
             print '%s: %s' % (x, y)
