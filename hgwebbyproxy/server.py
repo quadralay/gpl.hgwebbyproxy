@@ -1,13 +1,13 @@
-import wsgi
+from .wsgi import HGWebByProxy
 import sys
 import waitress
 
 
-if __name__ == '__main__':
-    if (len(sys.argv) == 4):
+if __name__ == "__main__":
+    if len(sys.argv) == 4:
         # Create application
         #
-        hgwebbyproxy_app = wsgi.HGWebByProxy()
+        hgwebbyproxy_app = HGWebByProxy()
 
         # Configure server
         #

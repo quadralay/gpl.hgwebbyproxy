@@ -1,2 +1,1 @@
-from wsgi import HGWebByProxy
-
+from .wsgi import HGWebByProxy
