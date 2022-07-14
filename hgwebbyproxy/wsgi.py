@@ -1,11 +1,11 @@
-import cache
 import logging
-import mercurial.hgweb
 import os
 import sys
 import traceback
-import webob.exc
 import wsgiref.util
+import webob.exc
+import mercurial.hgweb
+from . import cache
 
 
 __logger__ = logging.getLogger(__name__)
@@ -25,20 +25,20 @@ class HGWebByProxy(object):
                 __logger__.debug('redirect_app: 2')
                 proxy_hg_path = environ['HTTP_PROXY_HG_PATH']
                 proxy_hg_script_name = environ['HTTP_PROXY_HG_SCRIPT_NAME']
-                __logger__.debug('redirect_app: proxy_hg_path == %s' % proxy_hg_path)
-                __logger__.debug('redirect_app: proxy_hg_script_name == %s' % proxy_hg_script_name)
+                __logger__.debug('redirect_app: proxy_hg_path == %s', proxy_hg_path)
+                __logger__.debug('redirect_app: proxy_hg_script_name == %s', proxy_hg_script_name)
 
                 __logger__.debug('redirect_app: 3')
-                __logger__.debug('proxy_hg_app: PATH_INFO == %s' % environ['PATH_INFO'])
-                __logger__.debug('proxy_hg_app: SCRIPT_NAME == %s' % environ['SCRIPT_NAME'])
+                __logger__.debug('proxy_hg_app: PATH_INFO == %s', environ['PATH_INFO'])
+                __logger__.debug('proxy_hg_app: SCRIPT_NAME == %s', environ['SCRIPT_NAME'])
                 while (len(environ['SCRIPT_NAME']) < len(proxy_hg_script_name)):
                     wsgiref.util.shift_path_info(environ)
-                __logger__.debug('proxy_hg_app: PATH_INFO == %s' % environ['PATH_INFO'])
-                __logger__.debug('proxy_hg_app: SCRIPT_NAME == %s' % environ['SCRIPT_NAME'])
+                __logger__.debug('proxy_hg_app: PATH_INFO == %s', environ['PATH_INFO'])
+                __logger__.debug('proxy_hg_app: SCRIPT_NAME == %s', environ['SCRIPT_NAME'])
 
                 # Check cache
                 #
-                if (proxy_hg_path in self.__cache):
+                if proxy_hg_path in self.__cache:
                     # Found existing hgweb app
                     #
                     hgweb_app = self.__cache[proxy_hg_path]
@@ -48,7 +48,7 @@ class HGWebByProxy(object):
                     # Need to create hgweb app
                     #
                     __logger__.debug('redirect_app: 5')
-                    if (os.path.isdir(proxy_hg_path)):
+                    if os.path.isdir(proxy_hg_path):
                         __logger__.debug('redirect_app: 6')
                         # Create Mercurial web application
                         #
@@ -56,7 +56,12 @@ class HGWebByProxy(object):
                         # allow_push = *
                         # push_ssl = false
                         #
-                        hgweb_app = mercurial.hgweb.hgweb(proxy_hg_path)
+                        encoded_proxy_hg_path = proxy_hg_path
+
+                        if isinstance(encoded_proxy_hg_path, str):
+                            encoded_proxy_hg_path = encoded_proxy_hg_path.encode('utf-8', 'replace')
+
+                        hgweb_app = mercurial.hgweb.hgweb(encoded_proxy_hg_path)
 
                         # Cache hgweb app
                         #
@@ -66,7 +71,7 @@ class HGWebByProxy(object):
                         __logger__.debug('redirect_app: 7 - created hgweb')
 
             __logger__.debug('redirect_app: 8')
-            if (result is None):
+            if result is None:
                 raise webob.exc.HTTPNotFound()
 
         except webob.exc.HTTPException as http_exception:

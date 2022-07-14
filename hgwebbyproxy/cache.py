@@ -13,11 +13,11 @@ class CacheRecent(object):
     def __setitem__(self, param_key, param_value):
         # Existing value?
         #
-        if (param_key in self.__cache):
+        if param_key in self.__cache:
             # Update insertion order
             #
             del self.__cache[param_key]
-        elif (len(self.__cache) >= self.__limit):
+        elif len(self.__cache) >= self.__limit:
             # Delete oldest items
             #
             keys = self.__cache.keys()
@@ -33,7 +33,7 @@ class CacheRecent(object):
     def __getitem__(self, param_key):
         # Update insertion order
         #
-        if (param_key in self.__cache):
+        if param_key in self.__cache:
             value = self.__cache[param_key]
             del self.__cache[param_key]
             self.__cache[param_key] = value
@@ -57,9 +57,6 @@ class CacheRecent(object):
     def items(self):
         return self.__cache.items()
 
-    def iteritems(self):
-        return self.__cache.iteritems()
-
     def dump(self):
-        for x, y in self.__cache.iteritems():
-            print '%s: %s' % (x, y)
+        for x, y in self.__cache.items():
+            print('%s: %s', (x, y))
